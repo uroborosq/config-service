@@ -24,7 +24,6 @@ go install \
 ## Сборка
 
 ```bash
-cd build
 make all
 ```
 
