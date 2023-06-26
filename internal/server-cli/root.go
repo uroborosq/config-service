@@ -1,12 +1,14 @@
 package server_cli
 
 import (
+	"github.com/uroborosq/config-service/pkg/config"
+	genDns "github.com/uroborosq/config-service/pkg/gen-dns"
+	genHostname "github.com/uroborosq/config-service/pkg/gen-hostname"
+	grpcServer "github.com/uroborosq/config-service/pkg/grpc-server"
+
 	"context"
 	grpcRuntime "github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/spf13/cobra"
-	"github.com/uroborosq/config-service/pkg/config"
-	grpcServer "github.com/uroborosq/config-service/pkg/grpc-server"
-	"github.com/uroborosq/config-service/pkg/grpcGen"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
@@ -50,8 +52,8 @@ var rootCmd = &cobra.Command{
 			log.Fatal(err.Error())
 		}
 		s := grpc.NewServer()
-		grpcGen.RegisterDnsServiceServer(s, grpcServer.NewDnsGrpcServer(config.NewDnsService(connectionName)))
-		grpcGen.RegisterHostnameServiceServer(s, grpcServer.NewHostnameGrpcServer(config.NewHostnameService()))
+		genDns.RegisterDnsServiceServer(s, grpcServer.NewDnsGrpcServer(config.NewDnsService(connectionName)))
+		genHostname.RegisterHostnameServiceServer(s, grpcServer.NewHostnameGrpcServer(config.NewHostnameService()))
 
 		go func() {
 			log.Println("Starting gRPC server-cli on ", lsn.Addr().String())
@@ -68,11 +70,11 @@ var rootCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err.Error())
 		}
-		err = grpcGen.RegisterDnsServiceHandler(context.Background(), gwMux, conn)
+		err = genDns.RegisterDnsServiceHandler(context.Background(), gwMux, conn)
 		if err != nil {
 			log.Fatal(err.Error())
 		}
-		err = grpcGen.RegisterHostnameServiceHandler(context.Background(), gwMux, conn)
+		err = genHostname.RegisterHostnameServiceHandler(context.Background(), gwMux, conn)
 		if err != nil {
 			log.Fatal(err.Error())
 		}

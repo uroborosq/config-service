@@ -1,0 +1,26 @@
+syntax="proto3";
+
+package genHostname;
+option go_package = "config-service/pkg/gen-hostname";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+
+
+message Hostname {
+    string hostname = 1;
+}
+
+service HostnameService {
+    rpc GetHostname(google.protobuf.Empty) returns (Hostname) {
+        option(google.api.http) = {
+            get: "/hostname",
+        };
+    }
+    rpc UpdateHostname(Hostname) returns (google.protobuf.Empty) {
+        option(google.api.http) = {
+            put: "/hostname",
+            body: "*"
+        };
+    }
+}

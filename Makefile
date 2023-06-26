@@ -1,10 +1,17 @@
 generate:
-	protoc -I ../proto \
-	--go_out ../pkg/ --go_opt paths=source_relative \
-	--go-grpc_out ../pkg/ --go-grpc_opt paths=source_relative \
-	--grpc-gateway_out ../pkg/ --grpc-gateway_opt paths=source_relative \
-	--openapiv2_out ../api --openapiv2_opt logtostderr=true \
-	../proto/grpcGen/config.proto
+	protoc -I proto \
+	--go_out . --go_opt module=config-service \
+	--go-grpc_out . --go-grpc_opt module=config-service \
+	--grpc-gateway_out . --grpc-gateway_opt module=config-service \
+	--openapiv2_out api --openapiv2_opt logtostderr=true,allow_merge=true,merge_file_name=config \
+	proto/grpcGen/hostname.proto
+
+	protoc -I proto \
+    	--go_out . --go_opt module=config-service \
+    	--go-grpc_out . --go-grpc_opt module=config-service \
+    	--grpc-gateway_out . --grpc-gateway_opt module=config-service \
+    	--openapiv2_out api --openapiv2_opt logtostderr=true,allow_merge=true,merge_file_name=config \
+    	proto/grpcGen/dns.proto
 all: generate
-	go build -o ../cmd/bin/client ../cmd/client/main.go
-	go build -o ../cmd/bin/service ../cmd/service/main.go
+	go build -o cmd/bin/client cmd/client/main.go
+	go build -o cmd/bin/service cmd/service/main.go

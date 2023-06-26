@@ -3,7 +3,7 @@ package grpc_server
 import (
 	"context"
 
-	"github.com/uroborosq/config-service/pkg/grpcGen"
+	genDns "github.com/uroborosq/config-service/pkg/gen-dns"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -14,7 +14,7 @@ type dnsConfigService interface {
 }
 
 type DnsGrpcServer struct {
-	grpcGen.UnimplementedDnsServiceServer
+	genDns.UnimplementedDnsServiceServer
 	dnsService dnsConfigService
 }
 
@@ -22,17 +22,17 @@ func NewDnsGrpcServer(service dnsConfigService) *DnsGrpcServer {
 	return &DnsGrpcServer{dnsService: service}
 }
 
-func (s *DnsGrpcServer) GetServerList(_ context.Context, _ *emptypb.Empty) (*grpcGen.DnsServerList, error) {
+func (s *DnsGrpcServer) GetServerList(_ context.Context, _ *emptypb.Empty) (*genDns.DnsServerList, error) {
 	servers, err := s.dnsService.GetServerList()
-	return &grpcGen.DnsServerList{Servers: servers}, err
+	return &genDns.DnsServerList{Servers: servers}, err
 }
 
-func (s *DnsGrpcServer) AddServer(_ context.Context, server *grpcGen.DnsServer) (*emptypb.Empty, error) {
+func (s *DnsGrpcServer) AddServer(_ context.Context, server *genDns.DnsServer) (*emptypb.Empty, error) {
 	err := s.dnsService.AddServer(server.Address)
 	return &emptypb.Empty{}, err
 }
 
-func (s *DnsGrpcServer) RemoveServer(_ context.Context, server *grpcGen.DnsServer) (*emptypb.Empty, error) {
+func (s *DnsGrpcServer) RemoveServer(_ context.Context, server *genDns.DnsServer) (*emptypb.Empty, error) {
 	err := s.dnsService.RemoveServer(server.Address)
 	return &emptypb.Empty{}, err
 }

@@ -2,7 +2,7 @@ package client
 
 import (
 	"context"
-	"github.com/uroborosq/config-service/pkg/grpcGen"
+	genDns "github.com/uroborosq/config-service/pkg/gen-dns"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -32,7 +32,7 @@ func (c *DnsClient) AddServer(url string, dnsAddress string) error {
 	if err != nil {
 		return err
 	}
-	_, err = client.AddServer(context.Background(), &grpcGen.DnsServer{Address: dnsAddress})
+	_, err = client.AddServer(context.Background(), &genDns.DnsServer{Address: dnsAddress})
 	return err
 }
 
@@ -41,11 +41,11 @@ func (c *DnsClient) RemoveServer(url string, dnsAddress string) error {
 	if err != nil {
 		return err
 	}
-	_, err = client.RemoveServer(context.Background(), &grpcGen.DnsServer{Address: dnsAddress})
+	_, err = client.RemoveServer(context.Background(), &genDns.DnsServer{Address: dnsAddress})
 	return err
 }
 
-func (c *DnsClient) getClient(url string) (grpcGen.DnsServiceClient, error) {
+func (c *DnsClient) getClient(url string) (genDns.DnsServiceClient, error) {
 	conn, err := grpc.Dial(url, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	return grpcGen.NewDnsServiceClient(conn), err
+	return genDns.NewDnsServiceClient(conn), err
 }

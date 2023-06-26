@@ -1,0 +1,36 @@
+syntax="proto3";
+
+package genDns;
+option go_package = "config-service/pkg/gen-dns";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+
+message DnsServer {
+  string address = 1;
+}
+
+message DnsServerList {
+  repeated string servers = 1;
+}
+
+service DnsService {
+  rpc GetServerList(google.protobuf.Empty) returns (DnsServerList) {
+    option(google.api.http) = {
+      get: "/dns",
+    };
+  }
+
+  rpc AddServer(DnsServer) returns (google.protobuf.Empty) {
+    option(google.api.http) = {
+      post: "/dns",
+      body: "*"
+    };
+  }
+
+  rpc RemoveServer(DnsServer) returns (google.protobuf.Empty) {
+    option(google.api.http) = {
+      delete: "/dns",
+    };
+  }
+}

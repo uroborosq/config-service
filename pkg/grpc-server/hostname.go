@@ -3,7 +3,7 @@ package grpc_server
 import (
 	"context"
 
-	"github.com/uroborosq/config-service/pkg/grpcGen"
+	genHostname "github.com/uroborosq/config-service/pkg/gen-hostname"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -13,7 +13,7 @@ type hostnameService interface {
 }
 
 type HostnameGrpcServer struct {
-	grpcGen.UnimplementedHostnameServiceServer
+	genHostname.UnimplementedHostnameServiceServer
 	hostnameService hostnameService
 }
 
@@ -23,12 +23,12 @@ func NewHostnameGrpcServer(service hostnameService) *HostnameGrpcServer {
 	}
 }
 
-func (s *HostnameGrpcServer) UpdateHostname(_ context.Context, hostname *grpcGen.Hostname) (*emptypb.Empty, error) {
+func (s *HostnameGrpcServer) UpdateHostname(_ context.Context, hostname *genHostname.Hostname) (*emptypb.Empty, error) {
 	err := s.hostnameService.UpdateHostname(hostname.Hostname)
 	return &emptypb.Empty{}, err
 }
 
-func (s *HostnameGrpcServer) GetHostname(_ context.Context, _ *emptypb.Empty) (*grpcGen.Hostname, error) {
+func (s *HostnameGrpcServer) GetHostname(_ context.Context, _ *emptypb.Empty) (*genHostname.Hostname, error) {
 	hostname, err := s.hostnameService.GetHostname()
-	return &grpcGen.Hostname{Hostname: hostname}, err
+	return &genHostname.Hostname{Hostname: hostname}, err
 }
