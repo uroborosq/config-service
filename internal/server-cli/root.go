@@ -81,7 +81,7 @@ var rootCmd = &cobra.Command{
 
 		gwServer := http.NewServeMux()
 		gwServer.HandleFunc("/swagger/swagger.json", func(w http.ResponseWriter, r *http.Request) {
-			http.ServeFile(w, r, "../../api/grpcGen/config.swagger.json")
+			http.ServeFile(w, r, "../../api/config.swagger.json")
 		})
 		gwServer.Handle("/swagger/", http.StripPrefix("/swagger/", http.FileServer(http.Dir("../../web/swagger-ui/"))))
 		gwServer.Handle("/", gwMux)

@@ -2,9 +2,11 @@ package grpc_server
 
 import (
 	"context"
-
 	genDns "github.com/uroborosq/config-service/pkg/gen-dns"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"net"
 )
 
 type dnsConfigService interface {
@@ -28,6 +30,14 @@ func (s *DnsGrpcServer) GetServerList(_ context.Context, _ *emptypb.Empty) (*gen
 }
 
 func (s *DnsGrpcServer) AddServer(_ context.Context, server *genDns.DnsServer) (*emptypb.Empty, error) {
+	ip := net.ParseIP(server.Address)
+	if ip == nil {
+		return &emptypb.Empty{}, status.Error(codes.InvalidArgument, "ip address is invalid")
+	}
+	if ip.To4() == nil {
+		return &emptypb.Empty{}, status.Error(codes.InvalidArgument, "ip must be v4")
+
+	}
 	err := s.dnsService.AddServer(server.Address)
 	return &emptypb.Empty{}, err
 }
