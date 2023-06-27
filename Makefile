@@ -4,10 +4,7 @@ generate:
 	--go-grpc_out . --go-grpc_opt module=config-service \
 	--grpc-gateway_out . --grpc-gateway_opt module=config-service \
 	--openapiv2_out api \
-	--openapiv2_opt logtostderr=true \
-	--openapiv2_opt allow_merge=true \
-	--openapiv2_opt visibility_restriction_selectors=INTERNAL \
-    --openapiv2_opt merge_file_name=config \
+	--openapiv2_opt logtostderr=true,allow_merge=true,merge_file_name=config \
 	proto/grpcGen/*.proto
 
 all: generate
